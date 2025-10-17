@@ -1,11 +1,11 @@
-let posts = ('../data/postsContent.js');
+let posts = require('../data/postsContent.js');
 
 function index(req, res) {
     let filteredPosts = posts;
 
     if (req.query.tags) {
         filteredPosts = posts.filter(
-            post => pizza.tags.includes(req.query.tags)
+            post => post.tags.includes(req.query.tags)
         );
     }
 
