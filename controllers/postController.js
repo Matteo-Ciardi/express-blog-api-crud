@@ -29,11 +29,50 @@ function show(req, res) {
 }
 
 function store(req, res) {
-    res.send('Crea un nuovo post');
+    console.log('Dati ricevuti:', req.body);
+
+    const newId = Math.max(...posts.map(p => p.id)) + 1;
+
+    const newPost = {
+        id: newId,
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        tags: req.body.tags
+    };
+
+    posts.push(newPost);
+
+    res.status(201).json(newPost);
 }
 
 function update(req, res) {
-    res.send(`Aggiorna post con id ${req.params.id}`);
+    const id = parseInt(req.params.id);
+
+    console.log('Aggiornamento post con id:', id);
+    console.log('Nuovi dati:', req.body);
+
+    const postIndex = posts.findIndex(p => p.id === id);
+
+    if (postIndex === -1) {
+        res.status(404);
+        return res.json({
+            error: "Post non trovato",
+            message: `Il post con id ${id} non esiste`
+        });
+    }
+
+    const updatedPost = {
+        id: id,
+        title: req.body.title,
+        content: req.body.content,
+        image: req.body.image,
+        tags: req.body.tags
+    };
+
+    posts[postIndex] = updatedPost;
+
+    res.json(updatedPost);
 }
 
 function modify(req, res) {
@@ -44,10 +83,10 @@ function destroy(req, res) {
     const id = parseInt(req.params.id);
     const post = posts.findIndex(p => p.id === id);
 
-    if (!post) {
+    if (postIndex === -1) {
         res.status(404);
 
-        return req.json({
+        return res.json({
             status: 404,
             error: "Post non trovato",
             message: `Il post con id ${id} non esiste`
